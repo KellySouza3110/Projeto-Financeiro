@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Controle Financeiro</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <header>
+        <h1>💰 Controle Financeiro</h1>
+        <nav>
+            <button onclick="mostrarSecao('dashboard')">Dashboard</button>
+            <button onclick="mostrarSecao('receitas')">Receitas</button>
+            <button onclick="mostrarSecao('gastos')">Gastos</button>
+            <button onclick="mostrarSecao('cartao')">Cartão</button>
+            <button onclick="mostrarSecao('investimentos')">Investimentos</button>
+            <button onclick="mostrarSecao('metas')">Metas</button>
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- DASHBOARD -->
+        <section id="dashboard" class="secao ativa">
+            <h2>📊 Dashboard</h2>
+
+            <div class="filtro-mes">
+                <label>Filtrar por mês:</label>
+                <input type="month" id="filtroMes" onchange="carregarDashboard()" />
+            </div>
+
+            <div class="cards">
+                <div class="card verde">
+                    <p>Receita Total</p>
+                    <h3 id="dash-receitas">R$ 0,00</h3>
+                </div>
+                <div class="card vermelho">
+                    <p>Despesas Totais</p>
+                    <h3 id="dash-gastos">R$ 0,00</h3>
+                </div>
+                <div class="card azul">
+                    <p>Investimentos</p>
+                    <h3 id="dash-investimentos">R$ 0,00</h3>
+                </div>
+                <div class="card roxo">
+                    <p>Saldo Final</p>
+                    <h3 id="dash-saldo">R$ 0,00</h3>
+                </div>
+            </div>
+
+            <div class="tabela-container">
+                <h3>Gastos por Categoria</h3>
+                <table>
+                    <thead>
+                        <tr><th>Categoria</th><th>Total</th></tr>
+                    </thead>
+                    <tbody id="tabela-categorias"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- RECEITAS -->
+        <section id="receitas" class="secao">
+            <h2>💵 Receitas</h2>
+
+            <form id="form-receita" onsubmit="salvarReceita(event)">
+                <div class="form-grid">
+                    <div>
+                        <label>Data</label>
+                        <input type="date" id="r-data" required />
+                    </div>
+                    <div>
+                        <label>Fonte de Renda</label>
+                        <input type="text" id="r-fonte" placeholder="Ex: Salário" required />
+                    </div>
+                    <div>
+                        <label>Valor (R$)</label>
+                        <input type="number" id="r-valor" step="0.01" min="0" required />
+                    </div>
+                    <div>
+                        <label>Observação</label>
+                        <input type="text" id="r-obs" placeholder="Opcional" />
+                    </div>
+                </div>
+                <button type="submit">➕ Adicionar Receita</button>
+            </form>
+
+            <div class="tabela-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Fonte</th>
+                            <th>Valor</th>
+                            <th>Observação</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-receitas"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- GASTOS -->
+        <section id="gastos" class="secao">
+            <h2>💸 Gastos</h2>
+
+            <form id="form-gasto" onsubmit="salvarGasto(event)">
+                <div class="form-grid">
+                    <div>
+                        <label>Data</label>
+                        <input type="date" id="g-data" required />
+                    </div>
+                    <div>
+                        <label>Categoria</label>
+                        <select id="g-categoria" required>
+                            <option value="">Selecione...</option>
+                            <option>Moradia</option>
+                            <option>Alimentação</option>
+                            <option>Transporte</option>
+                            <option>Saúde</option>
+                            <option>Lazer</option>
+                            <option>Beleza</option>
+                            <option>Compras</option>
+                            <option>Viagem</option>
+                            <option>Empréstimo</option>
+                            <option>Cartão</option>
+                            <option>Inglês</option>
+                            <option>Outros</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Descrição</label>
+                        <input type="text" id="g-desc" placeholder="Ex: Aluguel" required />
+                    </div>
+                    <div>
+                        <label>Valor (R$)</label>
+                        <input type="number" id="g-valor" step="0.01" min="0" required />
+                    </div>
+                    <div>
+                        <label>Forma de Pagamento</label>
+                        <select id="g-forma">
+                            <option>Dinheiro</option>
+                            <option>PIX</option>
+                            <option>Débito</option>
+                            <option>Crédito</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Tipo</label>
+                        <select id="g-tipo">
+                            <option>Fixo</option>
+                            <option>Variável</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit">➕ Adicionar Gasto</button>
+            </form>
+
+            <div class="tabela-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Categoria</th>
+                            <th>Descrição</th>
+                            <th>Valor</th>
+                            <th>Pagamento</th>
+                            <th>Tipo</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-gastos"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- CARTÃO -->
+        <section id="cartao" class="secao">
+            <h2>💳 Cartão de Crédito</h2>
+
+            <form id="form-cartao" onsubmit="salvarCartao(event)">
+                <div class="form-grid">
+                    <div>
+                        <label>Data</label>
+                        <input type="date" id="c-data" required />
+                    </div>
+                    <div>
+                        <label>Descrição</label>
+                        <input type="text" id="c-desc" placeholder="Ex: Compra online" required />
+                    </div>
+                    <div>
+                        <label>Parcela (ex: 2/6)</label>
+                        <input type="text" id="c-parcela" placeholder="1/1 se à vista" />
+                    </div>
+                    <div>
+                        <label>Valor Total (R$)</label>
+                        <input type="number" id="c-total" step="0.01" min="0" required />
+                    </div>
+                    <div>
+                        <label>Valor da Parcela (R$)</label>
+                        <input type="number" id="c-parcela-valor" step="0.01" min="0" required />
+                    </div>
+                    <div>
+                        <label>Vencimento</label>
+                        <input type="date" id="c-venc" />
+                    </div>
+                </div>
+                <button type="submit">➕ Adicionar Lançamento</button>
+            </form>
+
+            <div class="tabela-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Descrição</th>
+                            <th>Parcela</th>
+                            <th>Valor Total</th>
+                            <th>Valor Parcela</th>
+                            <th>Vencimento</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-cartao"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- INVESTIMENTOS -->
+        <section id="investimentos" class="secao">
+            <h2>📈 Investimentos</h2>
+
+            <form id="form-invest" onsubmit="salvarInvestimento(event)">
+                <div class="form-grid">
+                    <div>
+                        <label>Data</label>
+                        <input type="date" id="i-data" required />
+                    </div>
+                    <div>
+                        <label>Tipo</label>
+                        <input type="text" id="i-tipo" placeholder="Ex: CDB, Tesouro Direto" required />
+                    </div>
+                    <div>
+                        <label>Valor (R$)</label>
+                        <input type="number" id="i-valor" step="0.01" min="0" required />
+                    </div>
+                    <div>
+                        <label>Instituição</label>
+                        <input type="text" id="i-inst" placeholder="Ex: Nubank" />
+                    </div>
+                    <div>
+                        <label>Rentabilidade</label>
+                        <input type="text" id="i-rent" placeholder="Ex: 100% CDI" />
+                    </div>
+                </div>
+                <button type="submit">➕ Adicionar Investimento</button>
+            </form>
+
+            <div class="tabela-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Tipo</th>
+                            <th>Valor</th>
+                            <th>Instituição</th>
+                            <th>Rentabilidade</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-investimentos"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- METAS -->
+        <section id="metas" class="secao">
+            <h2>🎯 Metas Financeiras</h2>
+
+            <form id="form-meta" onsubmit="salvarMeta(event)">
+                <div class="form-grid">
+                    <div>
+                        <label>Meta</label>
+                        <input type="text" id="m-meta" placeholder="Ex: Viagem para o Nordeste" required />
+                    </div>
+                    <div>
+                        <label>Valor Objetivo (R$)</label>
+                        <input type="number" id="m-obj" step="0.01" min="0" required />
+                    </div>
+                    <div>
+                        <label>Valor Atual (R$)</label>
+                        <input type="number" id="m-atual" step="0.01" min="0" value="0" />
+                    </div>
+                    <div>
+                        <label>Prazo</label>
+                        <input type="date" id="m-prazo" />
+                    </div>
+                </div>
+                <button type="submit">➕ Adicionar Meta</button>
+            </form>
+
+            <div class="metas-lista" id="lista-metas"></div>
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
